@@ -1,11 +1,15 @@
+# test_on_matrix.py
+# Script to test a trained model on a matrix-form dataset (e.g., emails.csv)
+# Loads model and data, predicts, and prints results/accuracy
+
 import pandas as pd
 import pickle
 
-# Load the trained model
+# Load the trained model (expects model.pkl)
 with open('model.pkl', 'rb') as f:
     model = pickle.load(f)
 
-# Load the matrix-form dataset
+# Load the matrix-form dataset (expects emails.csv)
 df_new = pd.read_csv('emails.csv')
 
 # If you have a label column, specify it here. Otherwise, use all columns as features.
@@ -21,7 +25,7 @@ else:
     y_true = None
     X_new = df_new.values
 
-# Predict
+# Predict using the loaded model
 predictions = model.predict(X_new)
 
 print("Predictions:", predictions)

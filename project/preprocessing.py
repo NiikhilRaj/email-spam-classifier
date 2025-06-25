@@ -1,3 +1,7 @@
+# project/preprocessing.py
+# Text preprocessing utilities for the project/ directory
+# Uses spaCy for tokenization, stopword removal, punctuation removal, and lemmatization
+
 import spacy
 from typing import List
 

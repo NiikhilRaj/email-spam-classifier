@@ -1,3 +1,7 @@
+# export_model.py
+# Script to train a spam classifier and export model artifacts (vectorizer, model, preprocessing function)
+# Loads data, preprocesses text, vectorizes, trains MultinomialNB, and saves artifacts for use in apps.
+
 import pandas as pd
 import numpy as np
 import nltk
@@ -13,7 +17,7 @@ import pickle
 nltk.download('punkt')
 nltk.download('stopwords')
 
-# Text preprocessing function
+# Text preprocessing: lowercasing, tokenization, removing stopwords/punctuation, stemming
 stemmer = PorterStemmer()
 def transform_text(text):
     text = text.lower()
@@ -33,19 +37,19 @@ def transform_text(text):
         y.append(stemmer.stem(i))
     return " ".join(y)
 
-# Load and clean data
+# Load and clean data (expects 'spam.csv' with columns v1=label, v2=text)
 df = pd.read_csv('spam.csv', encoding='latin1', on_bad_lines='skip')
 df = df.drop(columns=['Unnamed: 2','Unnamed: 3', 'Unnamed: 4'])
 df = df.rename(columns={'v1':'target', 'v2':'text'})
 df = df.drop_duplicates(keep='first')
 
-# Encode target
+# Encode target labels: ham=0, spam=1
 df['target'] = df['target'].map({'ham': 0, 'spam': 1})
 
-# Transform text
+# Transform text for ML
 df['transformed_text'] = df['text'].apply(transform_text)
 
-# Vectorization
+# Vectorization (TF-IDF)
 vectorizer = TfidfVectorizer()
 X = vectorizer.fit_transform(df['transformed_text']).toarray()
 y = df['target'].values
@@ -53,11 +57,11 @@ y = df['target'].values
 # Train-test split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=2)
 
-# Train model
+# Train Multinomial Naive Bayes model
 model = MultinomialNB()
 model.fit(X_train, y_train)
 
-# Export artifacts
+# Export artifacts for use in apps (vectorizer, model, preprocessing)
 with open('vectorizer.pkl', 'wb') as f:
     pickle.dump(vectorizer, f)
 with open('model.pkl', 'wb') as f:

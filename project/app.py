@@ -1,3 +1,6 @@
+# Command-line interface for training and predicting with the spam classifier in the project/ directory
+# Supports 'train' (trains and saves model) and 'predict' (predicts spam/ham for input text)
+
 import argparse
 import sys
 import os
@@ -10,10 +13,10 @@ def main():
     parser = argparse.ArgumentParser(description="Email Spam Classifier CLI")
     subparsers = parser.add_subparsers(dest='command')
 
-    # Train command
+    # Train command: runs train_model.py
     train_parser = subparsers.add_parser('train', help='Train the model')
 
-    # Predict command
+    # Predict command: runs predict.py with input text
     predict_parser = subparsers.add_parser(
         'predict', help='Predict spam/ham for input text')
     predict_parser.add_argument('text', nargs='+', help='Text(s) to classify')
